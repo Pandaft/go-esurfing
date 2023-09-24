@@ -1,3 +1,3 @@
 module github.com/Pandaft/go-esurfing
 
-go 1.21.0
+go 1.21
