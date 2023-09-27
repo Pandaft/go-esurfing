@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	shortDesc = "基于 Go 语言实现登录和登出广东天翼校园网的命令行工具"
+	shortDesc = "基于 Go 语言实现登入和登出广东天翼校园网的命令行工具"
 	githubUrl = "https://github.com/Pandaft/go-esurfing"
 )
 
