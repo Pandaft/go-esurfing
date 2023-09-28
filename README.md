@@ -70,6 +70,12 @@ Flags:
 
 <br />
 
+## 参考项目
+
+此项目核心实现方法参考自 [Z446C/ESC-Z](https://github.com/Z446C/ESC-Z/) ，可以认为是 Go 复刻版。
+
+<br />
+
 ## 其他
 
 敬请期待。
