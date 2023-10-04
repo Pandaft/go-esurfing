@@ -80,6 +80,8 @@ var loginCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(loginCmd)
 
+	loginCmd.Flags().SortFlags = false
+
 	loginCmd.Flags().StringVarP(&acc, "acc", "a", "", "账号")
 	loginCmd.Flags().StringVarP(&pwd, "pwd", "p", "", "密码")
 	loginCmd.Flags().StringVarP(&nasIP, "nasip", "n", "", "nasIP")
