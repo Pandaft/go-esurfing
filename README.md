@@ -11,8 +11,8 @@
 ```text
 > go-esurfing -h
 
-基于 Go 语言实现登入和登出广东天翼校园网的命令行工具
-项目 GitHub：https://github.com/Pandaft/go-esurfing
+基于 Go 实现登入和登出广东天翼校园网的命令行工具
+GitHub: https://github.com/Pandaft/go-esurfing
 
 Usage:
   go-esurfing [flags]
@@ -37,21 +37,27 @@ Use "go-esurfing [command] --help" for more information about a command.
 
 登入广东天翼校园网
 
+必填参数：username, password
+
 对于 nasip 和 clientip 参数：
   - 本机未登入，且在本机登入时，可不填写
   - 本机已登入，或在远程登入时，必须填写
+
+对于 mac 参数：
+  - 暂未发现对登入功能有实际影响
+  - 不填写默认为 00-00-00-00-00-00
 
 Usage:
   go-esurfing login [flags]
 
 Flags:
-  -a, --acc string        账号
-  -c, --clientip string   clientIP
-  -d, --debug             调试模式 (default true)
+  -n, --nasip    string   认证服务器 IP
+  -c, --clientip string   登录设备 IP
+  -m, --mac      string   MAC 地址
+  -u, --username string   账号
+  -p, --password string   密码
+  -d, --debug             调试模式
   -h, --help              help for login
-  -m, --mac string        MAC 地址
-  -n, --nasip string      nasIP
-  -p, --pwd string        密码
 ```
 
 ### 输出版本
