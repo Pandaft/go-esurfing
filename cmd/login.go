@@ -10,10 +10,10 @@ import (
 
 var (
 	nasIP    string
-	clientIp string
+	clientIP string
 	macAddr  string
-	pwd      string
-	acc      string
+	username string
+	password string
 	debug    bool
 )
 
@@ -22,10 +22,17 @@ var loginCmd = &cobra.Command{
 	Short: "登入",
 	Long: "登入广东天翼校园网" +
 		"\n" +
+		"\n必填参数：username, password" +
+		"\n" +
 		"\n对于 nasip 和 clientip 参数：" +
 		"\n  - 本机未登入，且在本机登入时，可不填写" +
-		"\n  - 本机已登入，或在远程登入时，必须填写",
+		"\n  - 本机已登入，或在远程登入时，必须填写" +
+		"\n" +
+		"\n对于 mac 参数：" +
+		"\n  - 暂未发现对登入功能有实际影响" +
+		"\n  - 不填写默认为 00-00-00-00-00-00",
 	Args: func(cmd *cobra.Command, args []string) error {
+
 		// 调试模式
 		if debug {
 			log.SetLevel(log.DebugLevel)
@@ -33,47 +40,54 @@ var loginCmd = &cobra.Command{
 
 		// 输出参数
 		log.Debug("参数：")
-		log.Debugf("  - 账号：%s", acc)
-		log.Debugf("  - 密码：%s", pwd)
-		log.Debugf("  - nasIP：%s", nasIP)
-		log.Debugf("  - clientIP：%s", clientIp)
-		log.Debugf("  - 调试：%t", debug)
+		log.Debugf("  - nasip:    %s", nasIP)
+		log.Debugf("  - clientip: %s", clientIP)
+		log.Debugf("  - mac:      %s", macAddr)
+		log.Debugf("  - username:  %s", username)
+		log.Debugf("  - password: %s", password)
+		log.Debugf("  - debug:    %t", debug)
 
 		// 验证参数
-		if acc == "" || pwd == "" {
+		if username == "" || password == "" {
 			return errors.New("账号或密码不能为空")
 		}
 
+		return nil
+
+	},
+	Run: func(cmd *cobra.Command, args []string) {
+
 		// 缺少 nasip 或 clientip 参数
-		if nasIP == "" || clientIp == "" {
+		if nasIP == "" || clientIP == "" {
 			log.Warn("缺少 nasip 或 clientip 参数，尝试获取中...")
 			esurfIpInfo, err := esurfing.GetESurfIpInfo()
 			if err != nil {
 				log.Errorf("获取失败：%s", err)
-				return err
+				return
 			}
-			nasIP, clientIp = esurfIpInfo.NasIp, esurfIpInfo.ClientIp
-			log.Infof("获取成功：nasip=%s  clientip=%s", nasIP, clientIp)
+			nasIP, clientIP = esurfIpInfo.NasIp, esurfIpInfo.ClientIp
+			log.Infof("获取成功，nasip: %s  clientip: %s", nasIP, clientIP)
 		}
 
-		// 缺省 MAC 地址
+		// 缺少 MAC 地址
 		if macAddr == "" {
+			log.Warn("缺少 mac 参数，尝试获取中...")
 			macAddr = util.GetLocalMACAddr()
+			log.Info("获取成功，mac: %s", macAddr)
 		}
 
-		return nil
-	},
-	Run: func(cmd *cobra.Command, args []string) {
-		res, err := esurfing.Login(nasIP, clientIp, acc, pwd, macAddr)
+		// 登入
+		res, err := esurfing.Login(nasIP, clientIP, username, password, macAddr)
 		if err != nil {
-			log.Error(err)
+			log.Errorf("登入错误：%s", err)
 			return
 		}
-		if res.Code == "0" {
-			log.Info("登入成功")
-		} else {
-			log.Errorf("登入失败，代码：%s  信息：%s", res.Code, res.Info)
+		if res.Code != "0" {
+			log.Errorf("登入失败（代码：%s  信息：%s）", res.Code, res.Info)
+			return
 		}
+		log.Info("登入成功")
+
 	},
 }
 
@@ -82,13 +96,13 @@ func init() {
 
 	loginCmd.Flags().SortFlags = false
 
-	loginCmd.Flags().StringVarP(&acc, "acc", "a", "", "账号")
-	loginCmd.Flags().StringVarP(&pwd, "pwd", "p", "", "密码")
-	loginCmd.Flags().StringVarP(&nasIP, "nasip", "n", "", "nasIP")
-	loginCmd.Flags().StringVarP(&clientIp, "clientip", "c", "", "clientIP")
+	loginCmd.Flags().StringVarP(&nasIP, "nasip", "n", "", "认证服务器 IP")
+	loginCmd.Flags().StringVarP(&clientIP, "clientip", "c", "", "登录设备 IP")
 	loginCmd.Flags().StringVarP(&macAddr, "mac", "m", "", "MAC 地址")
-	loginCmd.Flags().BoolVarP(&debug, "debug", "d", true, "调试模式")
+	loginCmd.Flags().StringVarP(&username, "username", "u", "", "账号")
+	loginCmd.Flags().StringVarP(&password, "password", "p", "", "密码")
+	loginCmd.Flags().BoolVarP(&debug, "debug", "d", false, "调试模式")
 
-	_ = loginCmd.MarkFlagRequired("acc")
-	_ = loginCmd.MarkFlagRequired("pwd")
+	_ = loginCmd.MarkFlagRequired("username")
+	_ = loginCmd.MarkFlagRequired("password")
 }
