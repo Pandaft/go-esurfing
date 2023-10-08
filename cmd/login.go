@@ -73,11 +73,21 @@ var loginCmd = &cobra.Command{
 		if macAddr == "" {
 			log.Warn("缺少 mac 参数，尝试获取中...")
 			macAddr = util.GetLocalMACAddr()
-			log.Info("获取成功，mac: %s", macAddr)
+			log.Infof("获取成功，mac: %s", macAddr)
 		}
 
+		// 获取验证码
+		log.Info("获取验证码中...")
+		challengeRes, err := esurfing.GetChallenge(nasIP, clientIP, macAddr, username)
+		if err != nil {
+			log.Error("获取验证码失败（代码：%s  信息：%s）", challengeRes.Code, challengeRes.Info)
+			return
+		}
+		log.Infof("获取验证码成功，验证码为 %s", challengeRes.Challenge)
+
 		// 登入
-		res, err := esurfing.Login(nasIP, clientIP, username, password, macAddr)
+		log.Info("请求登入中...")
+		res, err := esurfing.Login(challengeRes.Challenge, nasIP, clientIP, username, password, macAddr)
 		if err != nil {
 			log.Errorf("登入错误：%s", err)
 			return

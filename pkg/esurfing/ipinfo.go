@@ -5,6 +5,7 @@ import (
 	"github.com/charmbracelet/log"
 	"github.com/imroc/req/v3"
 	"regexp"
+	"time"
 )
 
 type ESurfIpInfo struct {
@@ -25,27 +26,43 @@ var (
 // GetESurfIpInfo 获取 IP 信息
 func GetESurfIpInfo() (esurfIpInfo ESurfIpInfo, err error) {
 
+	log.Debugf("获取 IP 信息中...")
+	start := time.Now()
+	defer func() {
+		elapsed := time.Now().Sub(start)
+		if err == nil {
+			log.Debugf("获取 IP 信息成功，耗时：%s", elapsed)
+		} else {
+			log.Debugf("获取 IP 信息失败，耗时：%s", elapsed)
+		}
+	}()
+
 	client := req.C()
 	client.SetRedirectPolicy(req.NoRedirectPolicy())
 
-	// 获取重定向链接
-	log.Debugf("发送 GET 请求到 %s", getESurfIpInfoUrl)
-	resp, err := client.R().
-		Get("http://189.cn/")
+	// 发送请求
+	log.Debugf("发送请求")
+	resp, err := client.R().Get(getESurfIpInfoUrl)
+
+	// 发生错误
 	if err != nil {
-		log.Error(err)
+		log.Debugf("发生错误：%s", err)
 		return
 	}
+
+	// 获取重定向链接
 	location, err := resp.Location()
 	if err != nil {
-		log.Errorf("获取重定向链接失败：%s", err)
+		log.Debugf("获取重定向链接失败：%s", err)
 		return
 	}
 	redirectUrl := location.String()
 	log.Debugf("重定向链接：%s", redirectUrl)
+
+	// 检查是否已经登录（通过是否已联网判断）
 	if redirectUrl == getESurfIpInfoUrlRedirect {
-		log.Warn("当前已登入")
 		err = errors.New("当前已登入")
+		log.Debug(err)
 		return
 	}
 

@@ -26,8 +26,8 @@ type GetChallengeResult struct {
 	Challenge string `json:"challenge"`
 }
 
-// getChallenge 获取验证码
-func getChallenge(nasIP, clientIP, mac, username string) (res GetChallengeResult, err error) {
+// GetChallenge 获取验证码
+func GetChallenge(nasIP, clientIP, mac, username string) (res GetChallengeResult, err error) {
 
 	const getChallengeUrl = urlBase + "/client/vchallenge"
 
