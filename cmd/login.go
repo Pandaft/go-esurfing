@@ -2,10 +2,11 @@ package cmd
 
 import (
 	"errors"
+	"github.com/Pandaft/go-esurfing/internal/logger"
 	"github.com/Pandaft/go-esurfing/internal/util"
 	"github.com/Pandaft/go-esurfing/pkg/esurfing"
-	"github.com/charmbracelet/log"
 	"github.com/spf13/cobra"
+	"time"
 )
 
 var (
@@ -14,7 +15,6 @@ var (
 	macAddr  string
 	username string
 	password string
-	debug    bool
 )
 
 var loginCmd = &cobra.Command{
@@ -33,19 +33,16 @@ var loginCmd = &cobra.Command{
 		"\n  - 不填写默认为 00-00-00-00-00-00",
 	Args: func(cmd *cobra.Command, args []string) error {
 
-		// 调试模式
-		if debug {
-			log.SetLevel(log.DebugLevel)
-		}
+		log := logger.GetLogger("")
 
 		// 输出参数
 		log.Debug("参数：")
 		log.Debugf("  - nasip:    %s", nasIP)
 		log.Debugf("  - clientip: %s", clientIP)
 		log.Debugf("  - mac:      %s", macAddr)
-		log.Debugf("  - username:  %s", username)
+		log.Debugf("  - username: %s", username)
 		log.Debugf("  - password: %s", password)
-		log.Debugf("  - debug:    %t", debug)
+		log.Debugf("  - debug:    %t", logger.Debug)
 
 		// 验证参数
 		if username == "" || password == "" {
@@ -57,6 +54,17 @@ var loginCmd = &cobra.Command{
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 
+		log := logger.GetLogger("")
+
+		// 执行耗时
+		start := time.Now()
+		log.Info("开始")
+		defer func() {
+			end := time.Now()
+			elapsed := end.Sub(start)
+			log.Infof("结束，耗时：%s", elapsed)
+		}()
+
 		// 缺少 nasip 或 clientip 参数
 		if nasIP == "" || clientIP == "" {
 			log.Warn("缺少 nasip 或 clientip 参数，尝试获取中...")
@@ -66,10 +74,10 @@ var loginCmd = &cobra.Command{
 				return
 			}
 			nasIP, clientIP = esurfIpInfo.NasIp, esurfIpInfo.ClientIp
-			log.Infof("获取成功，nasip: %s  clientip: %s", nasIP, clientIP)
+			log.Infof("获取成功（nasip: %s  clientip: %s）", nasIP, clientIP)
 		}
 
-		// 缺少 MAC 地址
+		// 缺少 mac 参数
 		if macAddr == "" {
 			log.Warn("缺少 mac 参数，尝试获取中...")
 			macAddr = util.GetLocalMACAddr()
@@ -80,16 +88,16 @@ var loginCmd = &cobra.Command{
 		log.Info("获取验证码中...")
 		challengeRes, err := esurfing.GetChallenge(nasIP, clientIP, macAddr, username)
 		if err != nil {
-			log.Error("获取验证码失败（代码：%s  信息：%s）", challengeRes.Code, challengeRes.Info)
+			log.Errorf("获取验证码失败（%s）", err)
 			return
 		}
-		log.Infof("获取验证码成功，验证码为 %s", challengeRes.Challenge)
+		log.Infof("获取验证码成功（验证码：%s）", challengeRes.Challenge)
 
 		// 登入
 		log.Info("请求登入中...")
 		res, err := esurfing.Login(challengeRes.Challenge, nasIP, clientIP, username, password, macAddr)
 		if err != nil {
-			log.Errorf("登入错误：%s", err)
+			log.Errorf("登入错误（%s）", err)
 			return
 		}
 		if res.Code != "0" {
@@ -111,7 +119,7 @@ func init() {
 	loginCmd.Flags().StringVarP(&macAddr, "mac", "m", "", "MAC 地址")
 	loginCmd.Flags().StringVarP(&username, "username", "u", "", "账号")
 	loginCmd.Flags().StringVarP(&password, "password", "p", "", "密码")
-	loginCmd.Flags().BoolVarP(&debug, "debug", "d", false, "调试模式")
+	loginCmd.Flags().BoolVarP(&logger.Debug, "debug", "d", false, "调试模式")
 
 	_ = loginCmd.MarkFlagRequired("username")
 	_ = loginCmd.MarkFlagRequired("password")

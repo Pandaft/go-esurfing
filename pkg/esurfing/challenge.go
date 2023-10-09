@@ -3,8 +3,8 @@ package esurfing
 import (
 	"errors"
 	"fmt"
+	"github.com/Pandaft/go-esurfing/internal/logger"
 	"github.com/Pandaft/go-esurfing/internal/util"
-	"github.com/charmbracelet/log"
 	"github.com/imroc/req/v3"
 	"strings"
 	"time"
@@ -26,24 +26,23 @@ type GetChallengeResult struct {
 	Challenge string `json:"challenge"`
 }
 
+const getChallengeUrl = urlBase + "/client/vchallenge"
+
 // GetChallenge 获取验证码
 func GetChallenge(nasIP, clientIP, mac, username string) (res GetChallengeResult, err error) {
 
-	const getChallengeUrl = urlBase + "/client/vchallenge"
+	log := logger.GetLogger("获取验证码")
 
-	log.Debugf("获取验证码中...")
+	// 执行耗时
 	start := time.Now()
+	log.Debug("开始")
 	defer func() {
 		end := time.Now()
 		elapsed := end.Sub(start)
-		if err == nil {
-			log.Debugf("获取验证码成功，耗时：%s", elapsed)
-		} else {
-			log.Debugf("获取验证码失败，耗时：%s", elapsed)
-		}
+		log.Debugf("结束，耗时：%s", elapsed)
 	}()
 
-	// 准备请求参数
+	// 准备参数
 	var (
 		timestamp     = time.Now().Unix()
 		authenticator = util.CalMD5Hash(fmt.Sprintf(
@@ -60,6 +59,8 @@ func GetChallenge(nasIP, clientIP, mac, username string) (res GetChallengeResult
 			Authenticator: authenticator,
 		}
 	)
+
+	// 调试输出
 	log.Debugf("POST body: %+v", body)
 
 	// 发送请求
@@ -80,14 +81,15 @@ func GetChallenge(nasIP, clientIP, mac, username string) (res GetChallengeResult
 	log.Debugf("resp body: %s", strings.Trim(resp.String(), "\n"))
 	log.Debugf("res: %+v", res)
 
-	// 检查错误
+	// 判断结果
 	if res.Code != "0" {
 		err = errors.New(fmt.Sprintf(
 			"代码：%s  信息：%s", res.Code, res.Info,
 		))
-		log.Debugf("获取验证码失败（%s）", err)
+		log.Debugf("获取失败：%s", err)
+	} else {
+		log.Debugf("获取成功，验证码为 %s", res.Challenge)
 	}
 
-	log.Debugf("获取验证码成功，验证码为 %s", res.Challenge)
 	return
 }
