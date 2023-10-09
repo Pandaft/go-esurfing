@@ -1,6 +1,4 @@
-# go-esurfing
-
-## 简介
+# go-esurfing <sup>v0.1.2</sup>
 
 基于 Go 实现登入和登出广东天翼校园网的命令行工具。
 
@@ -9,9 +7,9 @@
 ## 命令行
 
 ```text
-> go-esurfing -h
+> ./go-esurfing -h
 
-基于 Go 实现登入和登出广东天翼校园网的命令行工具
+基于 Go 实现登入和登出广东天翼校园网的命令行工具 (v0.1.2)
 GitHub: https://github.com/Pandaft/go-esurfing
 
 Usage:
@@ -33,7 +31,7 @@ Use "go-esurfing [command] --help" for more information about a command.
 ### 登入
 
 ```text
-> go-esurfing login -h
+> ./go-esurfing login -h
 
 登入广东天翼校园网
 
@@ -63,7 +61,7 @@ Flags:
 ### 输出版本
 
 ```text
-> go-esurfing version -h
+> ./go-esurfing version -h
 
 输出当前 go-esurfing 具体版本
 
