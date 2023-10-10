@@ -34,12 +34,7 @@ func Login(challenge, nasIP, clientIP, username, password, mac string) (res Logi
 	log := logger.GetLogger("登入校园网")
 
 	// 执行耗时
-	start := time.Now()
-	log.Debug("开始")
-	defer func() {
-		elapsed := time.Now().Sub(start)
-		log.Debugf("结束，耗时：%s", elapsed)
-	}()
+	defer util.MeasureExecTime(time.Now(), log)
 
 	// 准备参数
 	var (

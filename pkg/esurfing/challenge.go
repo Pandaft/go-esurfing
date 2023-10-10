@@ -33,14 +33,8 @@ func GetChallenge(nasIP, clientIP, mac, username string) (res GetChallengeResult
 
 	log := logger.GetLogger("获取验证码")
 
-	// 执行耗时
-	start := time.Now()
-	log.Debug("开始")
-	defer func() {
-		end := time.Now()
-		elapsed := end.Sub(start)
-		log.Debugf("结束，耗时：%s", elapsed)
-	}()
+	// 输出耗时
+	defer util.MeasureExecTime(time.Now(), log)
 
 	// 准备参数
 	var (

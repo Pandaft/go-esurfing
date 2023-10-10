@@ -3,6 +3,7 @@ package esurfing
 import (
 	"errors"
 	"github.com/Pandaft/go-esurfing/internal/logger"
+	"github.com/Pandaft/go-esurfing/internal/util"
 	"github.com/imroc/req/v3"
 	"regexp"
 	"time"
@@ -28,13 +29,8 @@ func GetESurfIpInfo() (esurfIpInfo ESurfIpInfo, err error) {
 
 	log := logger.GetLogger("获取IP信息")
 
-	// 记录耗时
-	start := time.Now()
-	log.Debug("开始")
-	defer func() {
-		elapsed := time.Now().Sub(start)
-		log.Debugf("结束，耗时：%s", elapsed)
-	}()
+	// 输出耗时
+	defer util.MeasureExecTime(time.Now(), log)
 
 	// 新客户端
 	client := req.C()

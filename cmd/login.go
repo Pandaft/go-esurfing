@@ -56,14 +56,8 @@ var loginCmd = &cobra.Command{
 
 		log := logger.GetLogger("")
 
-		// 执行耗时
-		start := time.Now()
-		log.Info("开始")
-		defer func() {
-			end := time.Now()
-			elapsed := end.Sub(start)
-			log.Infof("结束，耗时：%s", elapsed)
-		}()
+		// 输出耗时
+		defer util.MeasureExecTime(time.Now(), log)
 
 		// 缺少 nasip 或 clientip 参数
 		if nasIP == "" || clientIP == "" {
