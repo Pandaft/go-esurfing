@@ -111,6 +111,19 @@ Flags:
   -h, --help              help for login
 ```
 
+示例（不要保留 `<` 和 `>`）：
+
+```shell
+# 本机登录
+./go-esurfing login -u <账号> -p <密码>
+
+# 本机登录，且开启调试模式
+./go-esurfing login -u <账号> -p <密码> -d
+
+# 登录指定设备
+./go-esurfing login -n <nasip> -c <clientip> -u <账号> -p <密码>
+```
+
 ### 登出
 
 ```text
@@ -124,9 +137,9 @@ Usage:
   go-esurfing logout [flags]
 
 Flags:
-  -n, --nasip string      认证服务器 IP
+  -n, --nasip    string   认证服务器 IP
   -c, --clientip string   登录设备 IP
-  -m, --mac string        MAC 地址
+  -m, --mac      string   MAC 地址
   -d, --debug             调试模式
   -h, --help              help for logout
 ```
