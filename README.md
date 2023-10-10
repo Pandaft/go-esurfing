@@ -1,4 +1,4 @@
-# go-esurfing <sup>v0.1.2</sup>
+# go-esurfing <sup>v0.2.0</sup>
 
 基于 Go 实现登入和登出广东天翼校园网的命令行工具。
 
@@ -61,7 +61,7 @@ Go 生成的是一个静态可执行文件，除了 glibc 外没有其他外部�
 ```text
 > ./go-esurfing -h
 
-基于 Go 实现登入和登出广东天翼校园网的命令行工具 (v0.1.2)
+基于 Go 实现登入和登出广东天翼校园网的命令行工具 (v0.2.0)
 GitHub: https://github.com/Pandaft/go-esurfing
 
 Usage:
@@ -72,6 +72,7 @@ Available Commands:
   completion  Generate the autocompletion script for the specified shell
   help        Help about any command
   login       登入
+  logout      登出
   version     输出版本
 
 Flags:
@@ -108,6 +109,26 @@ Flags:
   -p, --password string   密码
   -d, --debug             调试模式
   -h, --help              help for login
+```
+
+### 登出
+
+```text
+> ./go-esurfing logout -h
+
+登出广东天翼校园网
+
+必填参数：nasip, clientip
+
+Usage:
+  go-esurfing logout [flags]
+
+Flags:
+  -n, --nasip string      认证服务器 IP
+  -c, --clientip string   登录设备 IP
+  -m, --mac string        MAC 地址
+  -d, --debug             调试模式
+  -h, --help              help for logout
 ```
 
 ### 输出版本
