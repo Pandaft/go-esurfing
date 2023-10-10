@@ -37,6 +37,9 @@ var logoutCmd = &cobra.Command{
 
 		log := logger.GetLogger("")
 
+		// 输出版本
+		log.Infof("版本：%s", version)
+
 		// 缺少 mac 参数
 		if macAddr == "" {
 			log.Warn("缺少 mac 参数，尝试获取中...")

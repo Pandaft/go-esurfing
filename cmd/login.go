@@ -56,6 +56,9 @@ var loginCmd = &cobra.Command{
 
 		log := logger.GetLogger("")
 
+		// 输出版本
+		log.Infof("版本：%s", version)
+
 		// 输出耗时
 		defer util.MeasureExecTime(time.Now(), log)
 
