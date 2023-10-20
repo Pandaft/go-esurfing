@@ -2,6 +2,9 @@
 
 基于 Go 实现登入和登出广东天翼校园网的命令行工具。
 
+## 😎 演示
+
+![demo.gif](docs/demo.gif)
 
 ## 🔌 接口
 
@@ -43,7 +46,7 @@ Go 生成的是一个静态可执行文件，除了 glibc 外没有其他外部�
 4. 进入项目根目录：`cd go-esurfing`
 5. 下载依赖：`go mod download`
 6. 编译：`go build`
-7. 按 “方式一” 使用编译的可执行文件。
+7. 按下述 “命令行” 方式使用编译的可执行文件。
 
 <br />
 
@@ -162,7 +165,7 @@ Flags:
 
 ## 📚 参考项目
 
-此项目接口实现方法参考自 [Z446C/ESC-Z](https://github.com/Z446C/ESC-Z/) ，可以认为是 Go 复刻优化版。
+- [Z446C/ESC-Z](https://github.com/Z446C/ESC-Z/)
 
 <br />
 
