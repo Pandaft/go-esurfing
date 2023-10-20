@@ -1,10 +1,10 @@
-# go-esurfing <sup>v0.2.0</sup>
-
-基于 Go 实现登入和登出广东天翼校园网的命令行工具。
+![go-esurfing](https://socialify.git.ci/pandaft/go-esurfing/image?description=1&descriptionEditable=%E5%9F%BA%E4%BA%8E%20Go%20%E5%AE%9E%E7%8E%B0%E7%99%BB%E5%85%A5%E5%92%8C%E7%99%BB%E5%87%BA%E5%B9%BF%E4%B8%9C%E5%A4%A9%E7%BF%BC%E6%A0%A1%E5%9B%AD%E7%BD%91%E7%9A%84%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7&font=Jost&forks=1&language=1&logo=https%3A%2F%2Fgithub.com%2FPandaft%2Fgo-esurfing%2Fraw%2F64c311d0feb39c4ba24df4400c02f58d04007364%2Fdocs%2Fesurfingclient.png&owner=1&stargazers=1&theme=Auto)
 
 ## 😎 演示
 
 ![demo.gif](docs/demo.gif)
+
+<br />
 
 ## 🔌 接口
 
